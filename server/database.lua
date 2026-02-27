@@ -1,26 +1,12 @@
 -- ══════════════════════════════════════════════════════════════════
 --  HM Handling — Database Layer
---  MopsScripts | oxmysql
+--  MopsScripts | oxmysql — Profile pro Fahrzeugtyp
 -- ══════════════════════════════════════════════════════════════════
 
---[[
-  SQL — einmalig ausführen:
-
-  CREATE TABLE IF NOT EXISTS `hm_handling_profiles` (
-      `id`          INT          NOT NULL AUTO_INCREMENT,
-      `vehicle`     VARCHAR(64)  NOT NULL,
-      `name`        VARCHAR(64)  NOT NULL,
-      `data`        LONGTEXT     NOT NULL,
-      `created_at`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (`id`),
-      KEY `idx_vehicle` (`vehicle`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
---]]
-
--- ── Profile laden (pro Fahrzeugmodell) ──────────────────────────
+-- ── Profile laden ─────────────────────────────────────────────────
 function DB_GetProfiles(vehicle, cb)
     MySQL.query(
-        'SELECT id, name, vehicle, data, created_at FROM hm_handling_profiles WHERE vehicle = ? ORDER BY created_at DESC',
+        'SELECT id, name, data, created_at FROM hm_handling_profiles WHERE vehicle = ? ORDER BY created_at DESC',
         { vehicle },
         function(rows)
             local profiles = {}
@@ -28,11 +14,10 @@ function DB_GetProfiles(vehicle, cb)
                 local ok, decoded = pcall(json.decode, row.data)
                 if ok and decoded then
                     table.insert(profiles, {
-                        id      = row.id,
-                        name    = row.name,
-                        vehicle = row.vehicle,
-                        data    = decoded,
-                        date    = tostring(row.created_at),
+                        id   = row.id,
+                        name = row.name,
+                        data = decoded,
+                        date = tostring(row.created_at),
                     })
                 end
             end
@@ -41,9 +26,9 @@ function DB_GetProfiles(vehicle, cb)
     )
 end
 
--- ── Profil speichern / überschreiben (pro Fahrzeugmodell) ───────
+-- ── Profil speichern / überschreiben ──────────────────────────────
 function DB_SaveProfile(vehicle, name, data, cb)
-    -- Limit prüfen (pro Fahrzeugmodell)
+    -- Limit prüfen
     MySQL.scalar(
         'SELECT COUNT(*) FROM hm_handling_profiles WHERE vehicle = ?',
         { vehicle },
@@ -53,7 +38,7 @@ function DB_SaveProfile(vehicle, name, data, cb)
                 return
             end
 
-            -- Gleicher Name + gleiches Fahrzeug → Update statt Insert
+            -- Gleicher Name + Fahrzeug → Update statt Insert
             MySQL.query(
                 'SELECT id FROM hm_handling_profiles WHERE vehicle = ? AND name = ? LIMIT 1',
                 { vehicle, name },
@@ -81,7 +66,7 @@ function DB_SaveProfile(vehicle, name, data, cb)
     )
 end
 
--- ── Profil löschen (pro Fahrzeugmodell) ─────────────────────────
+-- ── Profil löschen ────────────────────────────────────────────────
 function DB_DeleteProfile(vehicle, profileId, cb)
     MySQL.update(
         'DELETE FROM hm_handling_profiles WHERE id = ? AND vehicle = ?',
