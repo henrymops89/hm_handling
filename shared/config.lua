@@ -13,7 +13,26 @@ Config.Language = 'de'
 -- 'simple'    = Alltagssprache  |  'technical' = Rohe Keys (fBrakeForce)
 Config.LabelMode = 'simple'
 
--- ── Maximale Profile pro Fahrzeugmodell ─────────────────────────
+-- ── Berechtigungen ───────────────────────────────────────────────
+-- 'job' | 'ace' | 'both'
+Config.PermissionMode = 'job'
+
+-- Format: jobName = minGrade (0 = alle Grades erlaubt)
+Config.AllowedJobs = {
+    ['mechanic'] = 0,
+    ['tuner']    = 0,
+    ['police']   = 3, -- nur Supervisor+
+    ['admin']    = 0,
+}
+
+-- ACE Permission (nur wenn PermissionMode = 'ace' oder 'both')
+Config.AcePermission = 'hm.handling'
+
+-- ── Nur eigenes Fahrzeug ──────────────────────────────────────────
+-- true = nur registriertes Fahrzeug des Spielers
+Config.OwnVehicleOnly = false
+
+-- ── Maximale Profile pro Spieler ─────────────────────────────────
 Config.MaxProfiles = 20
 
 -- ── Command ──────────────────────────────────────────────────────
