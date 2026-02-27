@@ -1,10 +1,10 @@
 fx_version 'cerulean'
 game 'gta5'
 
-name        'hm-handling'
+name 'hm-handling'
 description 'HM Handling Editor — MopsScripts'
-version     '1.0.0'
-author      'MopsScripts'
+version '1.1.0' --NUI Big Upadate
+author 'MopsScripts'
 
 shared_scripts {
     '@ox_lib/init.lua',
