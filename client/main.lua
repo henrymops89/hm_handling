@@ -183,7 +183,6 @@ end)
 
 -- Profil löschen
 RegisterNUICallback('deleteProfile', function(data, cb)
-    if not DoesEntityExist(curVehicle) then cb('no_vehicle') return end
     TriggerServerEvent('hm-handling:server:DeleteProfile', tonumber(data.id), GetVehicleName(curVehicle))
     cb('ok')
 end)

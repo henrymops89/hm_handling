@@ -9,6 +9,7 @@ author      'MopsScripts'
 shared_scripts {
     '@ox_lib/init.lua',
     'shared/config.lua',
+    'shared/config_nui.lua',
 }
 
 client_scripts {
