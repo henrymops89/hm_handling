@@ -1,9 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
 
-name 'hm-handling'
+name 'hm_handling'
 description 'HM Handling Editor — MopsScripts'
-version '1.1.0' --NUI Big Upadate
+version '1.1.1' -- fxmanifest
 author 'MopsScripts'
 
 lua54 'no'
