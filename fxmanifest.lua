@@ -6,12 +6,14 @@ description 'HM Handling Editor — MopsScripts'
 version '1.1.0' --NUI Big Upadate
 author 'MopsScripts'
 
+lua54 'no'
 shared_scripts {
     '@ox_lib/init.lua',
     'shared/config.lua',
     'shared/config_nui.lua',
 }
 
+lua54 'yes'
 client_scripts {
     'client/main.lua',
     'client/nui.lua',
