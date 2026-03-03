@@ -31,3 +31,9 @@ files {
 }
 
 lua54 'yes'
+
+escrow_ignore {
+    'shared/config.lua',
+    'shared/config_nui.lua',
+    'install.sql',
+}
