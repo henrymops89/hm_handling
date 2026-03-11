@@ -8,6 +8,7 @@ author 'MopsScripts'
 
 shared_scripts {
     '@ox_lib/init.lua',
+    'shared/framework.lua',
     'shared/config.lua',
     'shared/config_nui.lua',
 }

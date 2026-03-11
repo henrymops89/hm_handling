@@ -14,8 +14,17 @@ end
 local function Notify(ntype, msg)
     if Config.NotifySystem == 'ox_lib' then
         lib.notify({ title = 'HM Handling', description = msg, type = ntype })
-    else
+    elseif Config.NotifySystem == 'esx' then
+        Framework.GetObject().ShowNotification(msg, ntype)
+    elseif Config.NotifySystem == 'qb' then
         exports['qb-core']:ShowNotify(msg, ntype)
+    else
+        -- Fallback zu ox_lib wenn moeglich
+        if lib then
+            lib.notify({ title = 'HM Handling', description = msg, type = ntype })
+        else
+            print(msg)
+        end
     end
 end
 

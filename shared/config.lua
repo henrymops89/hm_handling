@@ -1,6 +1,5 @@
--- ══════════════════════════════════════════════════════════════════
 --  HM Handling — Config
---  MopsScripts | QBox
+--  MopsScripts | Multi-Framework
 -- ══════════════════════════════════════════════════════════════════
 
 Config = {}
@@ -42,7 +41,7 @@ Config.Command = 'handling'
 Config.Keybind = nil -- z.B. 'F6'
 
 -- ── Notify-System ────────────────────────────────────────────────
--- 'ox_lib' | 'qb'
+-- 'ox_lib' | 'esx' | 'qb'
 Config.NotifySystem = 'ox_lib'
 
 -- ── Debug ────────────────────────────────────────────────────────

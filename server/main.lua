@@ -9,8 +9,7 @@ end
 
 -- ── Helpers ───────────────────────────────────────────────────────
 local function HasPermission(src)
-    return IsPlayerAceAllowed(tostring(src), 'admin')
-        or IsPlayerAceAllowed(tostring(src), 'command')
+    return Framework.HasPermission(src)
 end
 
 local function Respond(src, type, msg)
