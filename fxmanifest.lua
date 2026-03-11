@@ -3,7 +3,7 @@ game 'gta5'
 
 name 'hm-handling'
 description 'HM Handling Editor — MopsScripts'
-version '1.1.0' --NUI Big Upadate
+version '1.2.0' --ESX & QBCORE Update
 author 'MopsScripts'
 
 shared_scripts {
