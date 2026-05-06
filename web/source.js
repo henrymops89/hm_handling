@@ -353,6 +353,7 @@ function loadPreset(name) {
 // ── State ─────────────────────────────────────────────────────────────
 let currentValues = {};
 let defaultValues = {};
+let currentVehicleName = '';
 let profiles = (() => { try { return JSON.parse(localStorage.getItem('hm_handling_profiles') || '[]'); } catch(e) { return []; } })();
 let activeProfileName = null;
 
@@ -854,7 +855,10 @@ window.addEventListener('message', function(e) {
   switch (d.action) {
     case 'openMenu':
       document.getElementById('nuiMenu').style.display = 'flex';
-      if (d.vehicleName) document.getElementById('vehicleName').innerHTML = `<i class="bi bi-car-front"></i> ${d.vehicleName}`;
+      if (d.vehicleName) {
+        currentVehicleName = d.vehicleName;
+        document.getElementById('vehicleName').innerHTML = `<i class="bi bi-car-front"></i> ${d.vehicleName}`;
+      }
       // Texte aus config_nui.lua überschreiben
       if (d.translations) Object.assign(TRANSLATIONS, d.translations);
       if (d.labels)        Object.assign(LABELS, d.labels);
@@ -1066,12 +1070,26 @@ function renderProfiles(profileList) {
 // ── Export / Import JSON ──────────────────────────────────────────────
 function exportJSON() {
   const json = JSON.stringify(currentValues, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'handling.json';
-  a.click();
-  showToast(t('toast_exported'));
+  const ta = document.getElementById('exportJSONText');
+  ta.value = json;
+  document.getElementById('exportModal').style.display = 'flex';
+  setTimeout(() => { ta.select(); }, 50);
+}
+
+function copyExportJSON() {
+  const ta = document.getElementById('exportJSONText');
+  ta.select();
+  const btn = document.getElementById('copyExportBtn');
+  const reset = () => {
+    setTimeout(() => { btn.innerHTML = '<i class="bi bi-clipboard"></i> Kopieren'; }, 2000);
+  };
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(ta.value).catch(() => document.execCommand('copy'));
+  } else {
+    document.execCommand('copy');
+  }
+  btn.innerHTML = '<i class="bi bi-check-lg"></i> Kopiert!';
+  reset();
 }
 
 function openImportModal() {

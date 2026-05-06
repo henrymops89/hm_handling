@@ -5,6 +5,7 @@
 
 local isOpen     = false
 local curVehicle = 0
+local lastVehicle = 0
 
 local function Log(msg)
     if Config.Debug then print(('[HM-Handling] [CL] %s'):format(msg)) end
@@ -174,19 +175,16 @@ end)
 RegisterNUICallback('applyAll', function(data, cb)
     if not DoesEntityExist(curVehicle) then cb('no_vehicle') return end
     ApplyHandling(curVehicle, data.handling)
-    TriggerServerEvent('hm-handling:server:ApplyHandling', NetworkGetNetworkIdFromEntity(curVehicle), data.handling)
+    TriggerServerEvent('hm-handling:server:ApplyHandling', GetVehicleName(curVehicle), data.handling)
     cb('ok')
 end)
 
 -- Profil speichern
 RegisterNUICallback('saveProfile', function(data, cb)
     if not DoesEntityExist(curVehicle) then cb('no_vehicle') return end
-    TriggerServerEvent(
-        'hm-handling:server:SaveProfile',
-        data.name,
-        GetVehicleName(curVehicle),
-        data.handling
-    )
+    local vehName = GetVehicleName(curVehicle)
+    TriggerServerEvent('hm-handling:server:SaveProfile', data.name, vehName, data.handling)
+    TriggerServerEvent('hm-handling:server:ApplyHandling', vehName, data.handling)
     cb('ok')
 end)
 
@@ -211,6 +209,30 @@ CreateThread(function()
             SendNUIMessage({ action = 'closeMenu' })
             SetNuiFocus(false, false)
             isOpen = false
+        end
+    end
+end)
+
+-- Auto-Apply: Handling beim Betreten eines Fahrzeugs wiederherstellen
+RegisterNetEvent('hm-handling:client:ApplyActiveHandling', function(handling)
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped, false)
+    if veh ~= 0 and DoesEntityExist(veh) then
+        ApplyHandling(veh, handling)
+        Log('Aktives Handling auto-angewendet')
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(1000)
+        local ped = PlayerPedId()
+        local veh = GetVehiclePedIsIn(ped, false)
+        if veh ~= 0 and veh ~= lastVehicle and GetPedInVehicleSeat(veh, -1) == ped then
+            lastVehicle = veh
+            TriggerServerEvent('hm-handling:server:GetActiveHandling', GetVehicleName(veh))
+        elseif veh == 0 then
+            lastVehicle = 0
         end
     end
 end)

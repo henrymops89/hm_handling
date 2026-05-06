@@ -7,6 +7,13 @@ local function Log(msg)
     if Config.Debug then print(('[HM-Handling] [SV] %s'):format(msg)) end
 end
 
+-- Aktives Handling pro Spieler: activeHandling[src][vehicle] = data
+local activeHandling = {}
+
+AddEventHandler('playerDropped', function()
+    activeHandling[source] = nil
+end)
+
 -- ── Helpers ───────────────────────────────────────────────────────
 local function HasPermission(src)
     return Framework.HasPermission(src)
@@ -114,6 +121,26 @@ RegisterNetEvent('hm-handling:server:DeleteProfile', function(profileId, vehicle
             Respond(src, 'error', 'Profil nicht gefunden')
         end
     end)
+end)
+
+-- ── Aktives Handling speichern (nach Apply oder Save) ────────────────
+RegisterNetEvent('hm-handling:server:ApplyHandling', function(vehicle, handling)
+    local src = source
+    if not HasPermission(src) then return end
+    if type(vehicle) ~= 'string' or #vehicle < 1 then return end
+    if type(handling) ~= 'table' then return end
+    if not activeHandling[src] then activeHandling[src] = {} end
+    activeHandling[src][vehicle] = handling
+    Log(('Player %d — aktives Handling gespeichert: %s'):format(src, vehicle))
+end)
+
+-- ── Aktives Handling abrufen (beim Betreten eines Fahrzeugs) ─────────
+RegisterNetEvent('hm-handling:server:GetActiveHandling', function(vehicle)
+    local src = source
+    if type(vehicle) ~= 'string' or #vehicle < 1 then return end
+    if not activeHandling[src] or not activeHandling[src][vehicle] then return end
+    TriggerClientEvent('hm-handling:client:ApplyActiveHandling', src, activeHandling[src][vehicle])
+    Log(('Player %d — aktives Handling gesendet: %s'):format(src, vehicle))
 end)
 
 Log('Server gestartet')
