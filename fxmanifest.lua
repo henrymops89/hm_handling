@@ -3,7 +3,7 @@ game 'gta5'
 
 name 'hm-handling'
 description 'HM Handling Editor — MopsScripts'
-version '1.2.0' --ESX & QBCORE Update
+version '1.2.1' --Settings & Clipboard
 author 'MopsScripts'
 
 shared_scripts {
