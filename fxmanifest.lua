@@ -29,6 +29,7 @@ ui_page 'web/index.html'
 files {
     'web/index.html',
     'web/app.js',
+    'web/source.js',
 }
 
 lua54 'yes'
