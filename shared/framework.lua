@@ -15,7 +15,7 @@ local function Init()
         FWSettings.Type = 'esx'
         FWSettings.Object = exports['es_extended']:getSharedObject()
     elseif GetResourceState('qbx_core') == 'started' then
-        FWSettings.Type = 'qbcore'
+        FWSettings.Type = 'qbx'
         FWSettings.Object = exports['qbx_core']
     elseif GetResourceState('qb-core') == 'started' then
         FWSettings.Type = 'qbcore'
@@ -43,6 +43,11 @@ function Framework.GetPlayerJob(source)
         local xPlayer = FWSettings.Object.GetPlayerFromId(source)
         if xPlayer then
             return { name = xPlayer.job.name, grade = xPlayer.job.grade }
+        end
+          elseif FWSettings.Type == 'qbx' then
+        local Player = FWSettings.Object:GetPlayer(source)
+        if Player then
+            return { name = Player.PlayerData.job.name, grade = Player.PlayerData.job.grade.level }
         end
     elseif FWSettings.Type == 'qbcore' then
         local Player = FWSettings.Object.Functions.GetPlayer(source)
@@ -74,6 +79,10 @@ function Framework.HasPermission(source)
     if FWSettings.Type == 'esx' then
         local xPlayer = FWSettings.Object.GetPlayerFromId(source)
         if xPlayer and (xPlayer.getGroup() == 'admin' or xPlayer.getGroup() == 'superadmin') then
+            return true
+        end
+         elseif FWSettings.Type == 'qbx' then
+        if FWSettings.Object:HasPermission(source, 'admin') or FWSettings.Object:HasPermission(source, 'god') then
             return true
         end
     elseif FWSettings.Type == 'qbcore' then
