@@ -3,7 +3,7 @@ game 'gta5'
 
 name 'hm-handling'
 description 'HM Handling Editor — MopsScripts'
-version '1.2.1' --Settings & Clipboard
+version '1.2.2' --Topwerte erhöht
 author 'MopsScripts'
 
 shared_scripts {
